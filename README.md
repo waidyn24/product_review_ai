@@ -140,14 +140,6 @@ The application includes:
 
 ---
 
-## Future Enhancements
-
-* Add comments to reviews for threaded discussions
-* Implement a recommendation system for products
-* Add pagination and category filters to product listings
-* Expand AI features: chatbot, image analysis, etc.
-
----
 
 ## Contact
 
@@ -155,5 +147,5 @@ The application includes:
 * Telegram: [@@qwerty0987_282](https://t.me/surfloo)
 * Instagram: [waidyn24](https://instagram.com/waidyn24)
 
-
+---
 
