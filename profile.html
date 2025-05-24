@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Personal Cabinet</h2>
+
+    <!-- Profile photo -->
+    <div class="mb-4">
+        {% if user.profile_image %}
+            <img src="{{ url_for('static', filename='uploads/' + user.profile_image) }}"
+                 alt="Profile photo"
+                 class="img-thumbnail mb-3"
+                 width="150"
+                 id="profile-image-preview">
+        {% else %}
+            <img src="{{ url_for('static', filename='img/default-user.png') }}"
+                 alt="Default photo"
+                 class="img-thumbnail mb-3"
+                 width="150"
+                 id="profile-image-preview">
+        {% endif %}
+    </div>
+
+    <!-- Edit form -->
+    <form method="POST" enctype="multipart/form-data" id="profile-form">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.username.label(class="form-label") }}
+            {{ form.username(class="form-control") }}
+            {% for error in form.username.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+            {% for error in form.email.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="mb-3">
+            {{ form.photo.label(class="form-label") }}
+            {{ form.photo(class="form-control") }}
+            <small class="text-muted">Allowed JPG, PNG or GIF (max. 2MB)</small>
+            {% for error in form.photo.errors %}
+                <div class="invalid-feedback d-block">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save changes</button>
+    </form>
+
+    <!-- Login statistics chart -->
+    <div class="mt-5">
+        <h4>Login statistics</h4>
+        <div style="height: 200px;">  <!-- Container with fixed height added -->
+            <canvas id="loginChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Theme toggle button -->
+    <button id="theme-toggle-profile" class="btn btn-secondary mt-4">Toggle theme</button>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Image preview before upload
+    document.getElementById('photo').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('profile-image-preview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Theme handling
+    const root = document.documentElement;
+
+    function setTheme(theme) {
+        root.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+
+        // Update all theme toggle buttons on the page
+        document.querySelectorAll('[id^="theme-toggle"]').forEach(btn => {
+            btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Set saved theme
+        const savedTheme = localStorage.getItem("theme") || "light";
+        setTheme(savedTheme);
+
+        // Profile theme toggle button handler
+        const toggleBtnProfile = document.getElementById('theme-toggle-profile');
+        if (toggleBtnProfile) {
+            toggleBtnProfile.addEventListener('click', () => {
+                const currentTheme = root.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                setTheme(newTheme);
+            });
+        }
+
+        // Login activity chart
+        const rawData = {{ login_data | safe }};
+        const counts = {};
+
+        rawData.forEach(date => {
+            counts[date] = (counts[date] || 0) + 1;
+        });
+
+        const labels = Object.keys(counts).sort();
+        const data = labels.map(date => counts[date]);
+
+        const ctx = document.getElementById('loginChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Logins per day',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0  // Integers on Y axis
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            autoSkip: true,
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false  // Hide legend
+                    }
+                },
+                layout: {
+                    padding: {
+                        top: 10,
+                        right: 10,
+                        bottom: 10,
+                        left: 10
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    /* Additional styles for dark theme */
+    [data-theme="dark"] #profile-form {
+        background-color: #2c2c2c;
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    [data-theme="dark"] .form-control,
+    [data-theme="dark"] .form-select {
+        background-color: #3a3a3a;
+        border-color: #4a4a4a;
+        color: #f8f9fa;
+    }
+
+    [data-theme="dark"] .text-muted {
+        color: #9a9a9a !important;
+    }
+
+    /* Chart styles */
+    #loginChart {
+        max-height: 180px;
+        width: 100% !important;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Leave a Review{% endblock %}
+{% block content %}
+<h3>Leave a review for "{{ product.name }}"</h3>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.rating.label(class="form-label") }}
+        {{ form.rating(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.content.label(class="form-label") }}
+        {{ form.content(class="form-control", rows=4) }}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}
