@@ -1,0 +1,115 @@
+/* === GENERAL STYLES === */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    color: #212529;
+}
+
+h2, h3, h4 {
+    margin-bottom: 20px;
+}
+
+.container {
+    max-width: 1140px;
+}
+
+/* === NAVIGATION === */
+.navbar {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* === PRODUCT CARDS === */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    object-fit: cover;
+    height: 200px;
+}
+
+/* === BUTTONS === */
+.btn {
+    border-radius: 8px;
+}
+
+/* === FORMS === */
+form .form-control {
+    border-radius: 6px;
+}
+
+form .btn {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* === REVIEWS === */
+.review-box {
+    background-color: #ffffff;
+    border-left: 4px solid #007bff;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+}
+
+.review-box strong {
+    display: inline-block;
+    width: 100px;
+}
+
+.review-box small {
+    display: block;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+/* === FLASH MESSAGES === */
+.alert {
+    border-radius: 8px;
+}
+
+/* === FOOTER (if any) === */
+footer {
+    margin-top: 60px;
+    padding: 20px;
+    background: #343a40;
+    color: white;
+    text-align: center;
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+}
+
+[data-theme="dark"] {
+  --bg: #121212;
+  --text: #ffffff;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: #252525;
+    color: #fff;
+}
+[data-theme="dark"] .table {
+    color: #fff;
+}
+
+[data-theme="dark"] .article {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
